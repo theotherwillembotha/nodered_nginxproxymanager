@@ -1,0 +1,59 @@
+
+<script type="text/javascript" template-section="onCompose">
+    node
+        .addDefault("name", { value:"Update Host Node Example", required:true})
+        .addDefault("proxymanagerconfig", {type:"NginxProxyManagerConfigNode", required:true})
+        .addDefault("selectedDevices", {value:[]})
+        .setIcon("nginx.png")
+        .setPaletteLabel("Nginx Update Host Node")
+        .setLabelStyle("node_label_white")
+        .setLabel(function() {return this.name })
+        .setColor("#647791")
+        .setInput("input")
+        .addOutputs("event")
+</script>
+
+<div template-section="onIncludeOnce">
+    <style>
+        .node_label_white {
+            fill:white
+        }
+    </style>
+</div>
+
+<script type="text/javascript" template-section="onIncludeEditPrepare">
+{    
+    let node = this;
+
+}
+</script>
+
+<script type="text/javascript" template-section="onIncludeEditSave">
+{
+    let node = this;
+    
+}
+</script>
+
+<script type="text/html" template-section="onIncludeEditForm">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" />
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-proxymanagerconfig"><i class="fa fa-tag"></i>Nginx Proxy Manager</label>
+        <input type="text" id="node-input-proxymanagerconfig" />
+    </div>
+</script>
+
+<script type="text/markdown" template-section="onIncludeDocumentation">
+Update Nost Node for Nginx Proxy Manager
+
+### Inputs
+: *name*            (string) : The common name for the reolink event hook.
+: *nginx proxy manager config*  (Nginx Proxy Manager Config) : the configuration for the Nginx Proxy Manager
+
+### Payload Example
+</script>
+

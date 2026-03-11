@@ -1,0 +1,62 @@
+
+<script type="text/javascript" template-section="onCompose">
+    node
+        .addDefault("name", {value:"NginX Example", required:true})
+        .addDefault("url", {value:"http://192.168.1.30:2081", required:true})
+        .addDefault("email", {value:"info@example.com", required:true})
+        .addDefault("password", {value:"", required:true})
+
+        .setPaletteLabel("Nginx Proxy Manager Config")
+        .setLabel(function() {return this.name })
+</script>
+
+<script type="text/javascript" template-section="onIncludeEditPrepare">
+{
+    let node = this;
+}
+</script>
+
+<script type="text/javascript" template-section="onIncludeEditSave">
+{
+    let node = this;
+}
+</script>
+
+<script type="text/html" template-section="onIncludeEditForm">
+<div id="NginxProxyManagerConfig">
+    <div class="form-row">
+        <label for="node-config-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-config-input-name" />
+    </div>
+
+    <div class="form-row">
+        <label for="node-config-input-url"><i class="fa fa-tag"></i> URL</label>
+        <input type="text" id="node-config-input-url" />
+    </div>
+
+    <div class="form-row">
+        <label for="node-config-input-email"><i class="fa fa-tag"></i> Email</label>
+        <input type="text" id="node-config-input-email" />
+    </div>
+
+    <div class="form-row">
+        <label for="node-config-input-password"><i class="fa fa-tag"></i> Password</label>
+        <input type="password" id="node-config-input-password" />
+    </div>
+</div>
+</script>
+
+<script type="text/markdown" template-section="onIncludeDocumentation">
+Configuration node for the NginX Proxy Manager Integration
+
+## Inputs
+: *name*        (string)    : The common name for the nginx proxy
+: *url*         (string)    : The url for the nginx proxy
+: *email*       (string)    : The email for the nginx proxy
+: *password*    (string)    : The password for the nginx proxy.
+
+# References
+- [Nginx Proxy Manager - Project](https://nginxproxymanager.com/)
+- [Nginx Proxy Manager - Github](https://github.com/NginxProxyManager/nginx-proxy-manager)
+</script>
+
