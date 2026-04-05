@@ -1,6 +1,7 @@
+import { ProxyManagerClient, HostEntry, HTTPScheme } from "@theotherwillembotha/nodered_plugincore";
 import { CreateProxyHostPayload, NpmClient, ProxyHost, UpdateProxyHostPayload } from "nginx-proxy-manager-sdk";
 
-export class NginxProxyManagerClient {
+export class NginxProxyManagerClient implements ProxyManagerClient {
     private connection: NpmClient;
 
     constructor(url:string, email:string, password:string){
@@ -34,27 +35,18 @@ export class NginxProxyManagerClient {
         await this.connection.proxyHosts.create(proxyHost as CreateProxyHostPayload);
     }
 
+    public async getHosts():Promise<Partial<HostEntry>[]>{
+        return this.connection.proxyHosts.list()
+            .then(hosts => hosts.map(host => ({
+                id:host.id,
+                domainNames:host.domain_names,
+                scheme:host.forward_scheme as HTTPScheme,
+            })));
+    }
+
     private static merge(source:{[key:string]:string}, target:{[key:string]:string}, mapping:{[key:string]:string}):void{
         Object.entries(mapping).forEach(([key, value]) => {
             if(source[key] !== null) { target[value] === source[key] }
         });
     }
-}
-
-export type HostEntry = {
-    id:number,
-    domainNames:string[],
-    scheme:HTTPScheme,
-    forwardHost:string,
-    forwardPort:number,
-    accessList:string,
-    cacheAssets:boolean,
-    blockCommonExploits:boolean,
-    websocketSupport:boolean,
-
-}
-
-export enum HTTPScheme{
-    HTTP = "http",
-    HTTPS = "https"
 }

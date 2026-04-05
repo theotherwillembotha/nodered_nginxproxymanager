@@ -1,6 +1,6 @@
 
 import { Node } from "node-red";
-import { ConfigNode, ConfigNodeConfig, NodeDescriptor, SourceUtility } from "@theotherwillembotha/nodered_plugincore";
+import { ConfigNode, ConfigNodeConfig, NodeDescriptor, SourceUtility, NodeDescription } from "@theotherwillembotha/nodered_plugincore";
 import { NginxProxyManagerClient } from "../service/NginxProxyManagerClient";
 
 interface NginxProxyManagerConfigNodeConfig extends ConfigNodeConfig {
@@ -9,6 +9,14 @@ interface NginxProxyManagerConfigNodeConfig extends ConfigNodeConfig {
     password: string;
 }
 
+@NodeDescription({
+    id:"NginxProxyManagerConfigNode",
+    name:"Nginx Proxy Manager Config",
+    group:"config",
+    sourceFile:SourceUtility.getSourcePath("/build/", "/src/") + "NginxProxyManagerConfigNode.html",
+    package: "@theotherwillembotha/nodered_nginxproxymanager",
+    tags: [ "ReverseProxyType" ]
+})
 export class NginxProxyManagerConfigNode extends ConfigNode<NginxProxyManagerConfigNodeConfig> {
     
     private _client!: NginxProxyManagerClient;
@@ -18,18 +26,10 @@ export class NginxProxyManagerConfigNode extends ConfigNode<NginxProxyManagerCon
         let _this = this;
 
         this._client = new NginxProxyManagerClient(config.url, config.email, config.password);
+        console.log("INSTANTIATED NGINX PROXYMANAGER CONFIG NODE", config.id);
     }
 
     public client(): NginxProxyManagerClient {
         return this._client;
-    }
-
-    static override getNodeDescriptor():NodeDescriptor {
-        return new NodeDescriptor(
-            "config", 
-            "NginxProxyManagerConfigNode",
-            SourceUtility.getSourcePath("/build/", "/src/") + "NginxProxyManagerConfigNode.html",
-            "@theotherwillembotha/nodered_nginxproxymanager"
-        );
     }
 }

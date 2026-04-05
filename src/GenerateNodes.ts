@@ -1,10 +1,9 @@
 import { NodeGenerator } from "@theotherwillembotha/nodered_plugincore"
 
-import { NginxReverseProxyService, NginxProxyManagerConfigNode, UpdateHostNode } from "./index.js";
+import { NginxProxyManagerConfigNode, UpdateHostNode } from "./index.js";
 
 new NodeGenerator("./src/")
     // services.
-    .registerService(NginxReverseProxyService)
 
     // nodes
     .registerNode(NginxProxyManagerConfigNode)
