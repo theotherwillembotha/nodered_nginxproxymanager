@@ -2,7 +2,7 @@
 <script type="text/javascript" template-section="onCompose">
     node
         .addDefault("name", {value:"NginX Example", required:true})
-        .addDefault("url", {value:"http://192.168.1.30:2081", required:true})
+        .addDefault("url", {value:"http://nginxproxy:81", required:true})
         .addDefault("email", {value:"info@example.com", required:true})
         .addDefault("password", {value:"", required:true})
 
@@ -13,6 +13,97 @@
 <script type="text/javascript" template-section="onIncludeEditPrepare">
 {
     let node = this;
+
+    $("#npm-test-connection-btn").on("click", function() {
+        let $btn = $(this);
+        let $result = $("#npm-test-connection-result");
+
+        let url      = $("#node-config-input-url").val();
+        let username = $("#node-config-input-email").val();
+        let password = $("#node-config-input-password").val();
+
+        $result.text("Testing...").css("color", "gray");
+        $btn.prop("disabled", true);
+
+        $.ajax({
+            url: "nginxproxymanagerservice/testconnection",
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify({ connection: { url, username, password } }),
+            success: function(response) {
+                $result.text("\u2714 " + response.message).css("color", "green");
+            },
+            error: function(jqXHR) {
+                let msg = "Connection failed";
+                try {
+                    let body = JSON.parse(jqXHR.responseText);
+                    if (body.error) { msg = body.error; }
+                } catch(e) {}
+                $result.text("\u2718 " + msg).css("color", "red");
+            },
+            complete: function() {
+                $btn.prop("disabled", false);
+            }
+        });
+    });
+
+    $("#npm-show-hosts-btn").on("click", function() {
+        let $btn = $(this);
+        let url      = $("#node-config-input-url").val();
+        let username = $("#node-config-input-email").val();
+        let password = $("#node-config-input-password").val();
+        let title    = $("#node-config-input-name").val() || "Nginx Proxy Manager";
+
+        $btn.prop("disabled", true);
+
+        $.ajax({
+            url: "nginxproxymanagerservice/hosts",
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify({ connection: { url, username, password } }),
+            success: function(response) {
+                PluginCore.dialog({
+                    title: title,
+                    tabs: [
+                        {
+                            label: "Proxy Hosts",
+                            render: function($container) {
+                                var $table = PluginCore.table({
+                                    columns: [
+                                        { key: "id",           label: "ID" },
+                                        { key: "domain_names", label: "Domain Names",
+                                          render: function(v) { return v.join("<br>"); } },
+                                        { key: "forward_host", label: "Forward Host" },
+                                        { key: "forward_port", label: "Port" },
+                                        { key: "forward_scheme", label: "Scheme" },
+                                        { key: "enabled", label: "Enabled",
+                                          render: function(v) {
+                                              return $("<span>")
+                                                  .addClass(v ? "plugincore-status-enabled" : "plugincore-status-disabled")
+                                                  .text(v ? "\u2714 Enabled" : "\u2718 Disabled");
+                                          }}
+                                    ],
+                                    rows: response.hosts.proxyHosts
+                                });
+                                $container.append($table);
+                            }
+                        }
+                    ]
+                });
+            },
+            error: function(jqXHR) {
+                let msg = "Failed to fetch hosts";
+                try {
+                    let body = JSON.parse(jqXHR.responseText);
+                    if (body.error) { msg = body.error; }
+                } catch(e) {}
+                console.error("[NPM] " + msg);
+            },
+            complete: function() {
+                $btn.prop("disabled", false);
+            }
+        });
+    });
 }
 </script>
 
@@ -25,38 +116,60 @@
 <script type="text/html" template-section="onIncludeEditForm">
 <div id="NginxProxyManagerConfig">
     <div class="form-row">
-        <label for="node-config-input-name"><i class="fa fa-tag"></i> Name</label>
+        <label class="towb_editorlabel" for="node-config-input-name"><i class="fa fa-font"></i> Name</label>
         <input type="text" id="node-config-input-name" />
     </div>
 
     <div class="form-row">
-        <label for="node-config-input-url"><i class="fa fa-tag"></i> URL</label>
+        <label class="towb_editorlabel" for="node-config-input-url"><i class="fa fa-link"></i> URL</label>
         <input type="text" id="node-config-input-url" />
     </div>
 
     <div class="form-row">
-        <label for="node-config-input-email"><i class="fa fa-tag"></i> Email</label>
+        <label class="towb_editorlabel" for="node-config-input-email"><i class="fa fa-envelope"></i> Email</label>
         <input type="text" id="node-config-input-email" />
     </div>
 
     <div class="form-row">
-        <label for="node-config-input-password"><i class="fa fa-tag"></i> Password</label>
+        <label class="towb_editorlabel" for="node-config-input-password"><i class="fa fa-key"></i> Password</label>
         <input type="password" id="node-config-input-password" />
+    </div>
+
+    <div class="form-row">
+        <label class="towb_editorlabel"></label>
+        <button type="button" id="npm-test-connection-btn" class="red-ui-button">
+            <i class="fa fa-plug"></i> Test Connection
+        </button>
+        <span id="npm-test-connection-result" style="margin-left: 10px; font-size: 12px;"></span>
+    </div>
+
+    <div class="form-row">
+        <label class="towb_editorlabel"></label>
+        <button type="button" id="npm-show-hosts-btn" class="red-ui-button">
+            <i class="fa fa-list"></i> Show Hosts
+        </button>
     </div>
 </div>
 </script>
 
 <script type="text/markdown" template-section="onIncludeDocumentation">
-Configuration node for the NginX Proxy Manager Integration
+Connection configuration for an Nginx Proxy Manager instance. Referenced by all other nodes in this plugin.
 
-## Inputs
-: *name*        (string)    : The common name for the nginx proxy
-: *url*         (string)    : The url for the nginx proxy
-: *email*       (string)    : The email for the nginx proxy
-: *password*    (string)    : The password for the nginx proxy.
+### Properties
 
-# References
+: *name*     (string) : A descriptive label for this connection.
+: *url*      (string) : The base URL of the Nginx Proxy Manager admin API, including port (e.g. `http://192.168.1.10:81`).
+: *email*    (string) : The email address used to authenticate with Nginx Proxy Manager.
+: *password* (string) : The password for the above account.
+
+### Actions
+
+**Test Connection** — verifies the supplied credentials against the live Nginx Proxy Manager API and shows an inline success or failure message without saving the node.
+
+**Show Hosts** — retrieves the current list of proxy hosts and displays them in a dialog with a sortable table (ID, domain names, forward host, port, scheme, enabled status).
+
+### References
 - [Nginx Proxy Manager - Project](https://nginxproxymanager.com/)
-- [Nginx Proxy Manager - Github](https://github.com/NginxProxyManager/nginx-proxy-manager)
+- [Nginx Proxy Manager - GitHub](https://github.com/NginxProxyManager/nginx-proxy-manager)
 </script>
 

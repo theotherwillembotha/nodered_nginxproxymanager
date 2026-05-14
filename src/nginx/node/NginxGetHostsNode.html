@@ -1,0 +1,73 @@
+
+<script type="text/javascript" template-section="onCompose">
+    node
+        .addDefault("name", { value: "Nginx Get Hosts", required: true })
+        .addDefault("proxymanagerconfig", { type: "NginxProxyManagerConfigNode", required: true })
+        .addDefault("outputpath", { value: "payload" })
+        .setIcon("nginx.png")
+        .setPaletteLabel("Nginx Get Hosts")
+        .setLabelStyle("node_label_white")
+        .setLabel(function() { return this.name })
+        .setColor("#647791")
+        .setInput("input")
+        .addOutputs("event")
+</script>
+
+<script type="text/javascript" template-section="onIncludeEditPrepare">
+{
+    let node = this;
+
+    $("#node-input-outputpath").typedInput({
+        types: ["msg"]
+    });
+}
+</script>
+
+<script type="text/javascript" template-section="onIncludeEditSave">
+{
+    let node = this;
+}
+</script>
+
+<script type="text/html" template-section="onIncludeEditForm">
+    <div class="form-row">
+        <label class="towb_editorlabel" for="node-input-name"><i class="fa fa-font"></i> Name</label>
+        <input type="text" id="node-input-name" />
+    </div>
+
+    <div class="form-row">
+        <label class="towb_editorlabel" for="node-input-proxymanagerconfig"><i class="fa fa-server"></i> Proxy Manager</label>
+        <input type="text" id="node-input-proxymanagerconfig" />
+    </div>
+
+    <div class="form-row">
+        <label class="towb_editorlabel" for="node-input-outputpath"><i class="fa fa-sign-out"></i> Output</label>
+        <input type="text" id="node-input-outputpath" />
+    </div>
+</script>
+
+<script type="text/markdown" template-section="onIncludeDocumentation">
+Retrieves the list of proxy hosts from Nginx Proxy Manager and writes them to the specified output path on the message.
+
+### Properties
+
+: *name*          (string)     : A descriptive label for the node.
+: *proxy manager* (npm config) : The Nginx Proxy Manager connection to use.
+: *output*        (msg)        : The message property to write the hosts array to. Defaults to `msg.payload`.
+
+### Output
+
+The original message is forwarded with the specified property set to an array of proxy host objects:
+
+```javascript
+[
+    {
+        id:          number,    // proxy host ID
+        domainNames: string[],  // domain names served by this host
+        scheme:      string,    // forwarding scheme: "http" or "https"
+        forwardHost: string,    // target host
+        forwardPort: number,    // target port
+    }
+]
+```
+</script>

@@ -1,13 +1,15 @@
-import { NodeGenerator } from "@theotherwillembotha/nodered_plugincore"
+import { NodeGenerator } from "@theotherwillembotha/node-red-plugincore";
 
-import { NginxProxyManagerConfigNode, UpdateHostNode } from "./index.js";
+import { NginxProxyManagerService, NginxProxyManagerConfigNode, UpdateNginxHostNode, NginxGetHostsNode } from "./index.js";
 
 new NodeGenerator("./src/")
     // services.
+    .registerService(NginxProxyManagerService)
 
     // nodes
     .registerNode(NginxProxyManagerConfigNode)
-    .registerNode(UpdateHostNode)
+    .registerNode(UpdateNginxHostNode)
+    .registerNode(NginxGetHostsNode)
     
     // done.
     .generate("./build/Nodes", "./build/Plugins");

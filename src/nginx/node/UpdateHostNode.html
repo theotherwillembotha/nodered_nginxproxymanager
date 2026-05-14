@@ -37,23 +37,78 @@
 
 <script type="text/html" template-section="onIncludeEditForm">
     <div class="form-row">
-        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <label class="towb_editorlabel" for="node-input-name"><i class="fa fa-font"></i> Name</label>
         <input type="text" id="node-input-name" />
     </div>
 
     <div class="form-row">
-        <label for="node-input-proxymanagerconfig"><i class="fa fa-tag"></i>Nginx Proxy Manager</label>
+        <label class="towb_editorlabel" for="node-input-proxymanagerconfig"><i class="fa fa-server"></i> Proxy Manager</label>
         <input type="text" id="node-input-proxymanagerconfig" />
     </div>
 </script>
 
 <script type="text/markdown" template-section="onIncludeDocumentation">
-Update Nost Node for Nginx Proxy Manager
+Creates or updates a proxy host entry in Nginx Proxy Manager.
+
+The operation is determined by the presence of an `id` field in `msg.payload`:
+- **No `id`** — creates a new proxy host.
+- **With `id`** — updates the existing proxy host with that ID.
+
+### Properties
+
+: *name*          (string)     : A descriptive label for the node.
+: *proxy manager* (npm config) : The Nginx Proxy Manager connection to use.
 
 ### Inputs
-: *name*            (string) : The common name for the reolink event hook.
-: *nginx proxy manager config*  (Nginx Proxy Manager Config) : the configuration for the Nginx Proxy Manager
 
-### Payload Example
+: *msg.payload* (object) : The host configuration to create or update.
+
+**Create a new host:**
+
+```javascript
+{
+    domainNames: string[],        // domain names to forward (must be unique and not yet registered)
+    scheme: "http" | "https",     // forwarding scheme
+    forwardHost: string,          // target host to forward requests to
+    forwardPort: number,          // target port
+    accessList: string,           // access list to bind to this host
+    cacheAssets: boolean,         // optional: cache static assets
+    blockCommonExploits: boolean, // optional: block common exploit patterns
+    websocketSupport: boolean,    // optional: enable WebSocket support
+}
+```
+
+**Update an existing host:**
+
+```javascript
+{
+    id: number,                   // required: ID of the proxy host to update
+    domainNames: string[],        // optional
+    scheme: "http" | "https",     // optional
+    forwardHost: string,          // optional
+    forwardPort: number,          // optional
+    accessList: string,           // optional
+    cacheAssets: boolean,         // optional
+    blockCommonExploits: boolean, // optional
+    websocketSupport: boolean,    // optional
+}
+```
+
+### Output
+
+The original message is forwarded unchanged after the operation completes.
+
+### Example
+
+```json
+{
+    "domainNames": ["myservice.example.com"],
+    "scheme": "http",
+    "forwardHost": "192.168.1.30",
+    "forwardPort": 8080,
+    "blockCommonExploits": true,
+    "websocketSupport": true
+}
+```
 </script>
 
