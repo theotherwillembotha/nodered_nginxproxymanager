@@ -38,4 +38,8 @@ export class NginxProxyManagerClient implements ProxyManagerClient {
             forwardPort: h.forward_port,
         }));
     }
+
+    public async deleteHost(id: number): Promise<void> {
+        await this._client.deleteProxyHost(id);
+    }
 }
