@@ -14,7 +14,7 @@ interface NginxProxyManagerConfigNodeConfig extends ConfigNodeConfig {
     name:"Nginx Proxy Manager Config",
     group:"config",
     sourceFile:SourceUtility.getSourcePath("/build/", "/src/") + "NginxProxyManagerConfigNode.html",
-    package: "@theotherwillembotha/nodered_nginxproxymanager",
+    package: "@theotherwillembotha/node-red-nginxproxymanager",
     tags: [ "ReverseProxyType" ],
     templates: [
         { template: UIHelperTemplate, config: {} }
@@ -26,8 +26,6 @@ export class NginxProxyManagerConfigNode extends ConfigNode<NginxProxyManagerCon
     
     constructor(node: Node, config: NginxProxyManagerConfigNodeConfig){
         super(node, config);
-        let _this = this;
-
         this._client = new NginxProxyManagerClient(config.url, config.email, config.password);
     }
 

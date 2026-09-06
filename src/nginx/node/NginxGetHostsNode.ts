@@ -15,7 +15,7 @@ interface NginxGetHostsNodeConfig extends BaseNodeConfig, MetricsTemplateConfig,
     name: "Nginx Get Hosts",
     group: "nginxproxymanager",
     sourceFile: SourceUtility.getSourcePath("/build/", "/src/") + "NginxGetHostsNode.html",
-    package: "@theotherwillembotha/nodered_nginxproxymanager",
+    package: "@theotherwillembotha/node-red-nginxproxymanager",
     templates: [
         { template: LoggerTemplate, config: {} },
         { template: MetricsTemplate, config: {} }

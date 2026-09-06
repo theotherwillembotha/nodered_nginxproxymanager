@@ -1,5 +1,6 @@
 import { NodeAPI, NodeAPISettingsWithData } from "node-red";
-import { BaseService, ServiceDescriptor } from "@theotherwillembotha/node-red-plugincore"
+import { BaseService } from "@theotherwillembotha/node-red-plugincore"
+import { ServiceDescription } from "@theotherwillembotha/node-red-plugincore"
 import { NginxClient } from "./client/NginxClient";
 import { NginxApiError } from "./client/NginxHttpClient";
 
@@ -23,6 +24,11 @@ type ProxyHostSummary = {
 }
 
 
+@ServiceDescription({
+    id: "@theotherwillembotha/nginxproxymanagerservice",
+    type: "integration-plugin",
+    sourceFile: "./nginx/service/NginxProxyManagerService"
+})
 export class NginxProxyManagerService extends BaseService {
 
     private red!: NodeAPI<NodeAPISettingsWithData>;
@@ -113,12 +119,4 @@ export class NginxProxyManagerService extends BaseService {
         console.log("STOPPING SERVICE: " + this.name());
     }
 
-    static override getServiceDescriptor():ServiceDescriptor {
-        return new ServiceDescriptor(
-            "@theotherwillembotha/nginxproxymanagerservice",
-            "NginxProxyManagerService", 
-            "integration-plugin",
-            "./nginx/service/NginxProxyManagerService",
-            NginxProxyManagerService);
-    }
 }

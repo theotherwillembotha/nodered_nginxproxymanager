@@ -15,7 +15,7 @@ interface UpdateNginxHostNodeConfig extends BaseNodeConfig, MetricsTemplateConfi
     name:"Update Nginx Host",
     group:"nginxproxymanager",
     sourceFile:SourceUtility.getSourcePath("/build/", "/src/") + "UpdateHostNode.html",
-    package: "@theotherwillembotha/nodered_nginxproxymanager",
+    package: "@theotherwillembotha/node-red-nginxproxymanager",
     templates: [
         { template: LoggerTemplate, config: {}},
         { template: MetricsTemplate, config: {}}
@@ -34,8 +34,6 @@ export class UpdateNginxHostNode extends BaseNode<UpdateNginxHostNodeConfig> {
 
     constructor(node: Node, config: UpdateNginxHostNodeConfig){
         super(node, config);
-        let _this = this;
-
         // get a reference to the NGINXPROXYMANAGER client.
         this._client = ((NodeManager.RED.nodes.getNode(config.proxymanagerconfig) as any).node() as NginxProxyManagerConfigNode).client();
     }
