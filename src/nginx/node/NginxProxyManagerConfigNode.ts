@@ -2,6 +2,7 @@
 import { Node } from "node-red";
 import { ConfigNode, ConfigNodeConfig, SourceUtility, NodeDescription, UIHelperTemplate } from "@theotherwillembotha/node-red-plugincore";
 import { NginxProxyManagerClient } from "../service/NginxProxyManagerClient";
+import { NginxProxyManagerService } from "../service/NginxProxyManagerService";
 
 interface NginxProxyManagerConfigNodeConfig extends ConfigNodeConfig {
     url: string;
@@ -18,7 +19,8 @@ interface NginxProxyManagerConfigNodeConfig extends ConfigNodeConfig {
     tags: [ "ReverseProxyType" ],
     templates: [
         { template: UIHelperTemplate, config: {} }
-    ]
+    ],
+    dependencies: [ NginxProxyManagerService ]
 })
 export class NginxProxyManagerConfigNode extends ConfigNode<NginxProxyManagerConfigNodeConfig> {
     

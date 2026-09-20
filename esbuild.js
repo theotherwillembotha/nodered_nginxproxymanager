@@ -5,8 +5,6 @@ const path = require('path');
 const external = [
     // Real Node-RED runtime dep — installed in the container
     'node-red',
-    // Plugincore is a peer dep — volume-mounted in Docker, or installed via npm dependencies.
-    '@theotherwillembotha/node-red-plugincore',
     // plugincore build-time deps — lazy require()s, only needed during node generation
     'jsdom',
     'js-beautify',

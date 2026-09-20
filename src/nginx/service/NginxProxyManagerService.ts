@@ -26,6 +26,7 @@ type ProxyHostSummary = {
 
 @ServiceDescription({
     id: "@theotherwillembotha/nginxproxymanagerservice",
+    name: "NginxProxyManagerService",
     type: "integration-plugin",
     sourceFile: "./nginx/service/NginxProxyManagerService"
 })
