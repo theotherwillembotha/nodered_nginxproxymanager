@@ -1,6 +1,6 @@
 {
   "name": "@theotherwillembotha/node-red-nginxproxymanager",
-  "version": "0.4.0",
+  "version": "0.4.6",
   "description": "Node-RED nodes for managing Nginx Proxy Manager hosts, built on node-red-plugincore.",
   "author": "Willem Botha (@theotherwillembotha)",
   "license": "ISC",
@@ -44,7 +44,7 @@
     "nodered": ">=4.0.0"
   },
   "dependencies": {
-    "@theotherwillembotha/node-red-plugincore": "^0.4.2"
+    "@theotherwillembotha/node-red-plugincore": "^0.4.6"
   },
   "devDependencies": {
     "@theotherwillembotha/node-red-plugincore": "../nodered_plugincore",
